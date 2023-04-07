@@ -1,4 +1,5 @@
 <script>
+	import Button, { Label } from '@smui/button';
 </script>
 
 <svelte:head>
@@ -6,5 +7,5 @@
 </svelte:head>
 
 <div>
-	hello
+	<Button>Hello</Button>
 </div>
