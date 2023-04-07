@@ -2,6 +2,7 @@
   import Drawer, { AppContent, Content, Header, Title, Subtitle } from '@smui/drawer';
   import Button, { Label } from '@smui/button';
   import TextEditor from '../../components/pageComponents/workspace/TextEditor.svelte';
+  import TextSelection from '../../components/pageComponents/workspace/TextSelection.svelte';
 
   let active = 'Gray Kittens';
   let isDrawerOpen = false;
@@ -25,6 +26,7 @@
   <AppContent class="app-content">
     <Button on:click={() => isDrawerOpen = !isDrawerOpen}>Toggle</Button>
     <TextEditor></TextEditor>
+    <TextSelection></TextSelection>
   </AppContent>
 </div>
 

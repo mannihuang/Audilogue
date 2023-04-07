@@ -15,3 +15,13 @@ export interface IElevenLabsWrapper {
 export interface IElevenLabsContext {
     eApi: IElevenLabsWrapper;
 }
+
+export interface ISpeech {
+    id: string;
+    text: string;
+}
+
+export interface IParagraph {
+    id: string;
+    speeches: ISpeech[];
+}
