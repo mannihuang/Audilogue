@@ -1,6 +1,8 @@
 <script lang="ts">
   import Select, { Option } from '@smui/select';
-  import { allVoices } from '../../store/user';
+  import Checkbox from '@smui/checkbox';
+  import FormField from '@smui/form-field';
+  import { voiceChoices, showSampleVoices, showUserClonedVoices } from '../../store/user';
   import { currentSpeech, selectedSpeeches, updateSpeechData } from '../../store/speeches';
   import { onDestroy } from 'svelte';
 
@@ -21,9 +23,30 @@
 </script>
 
 <div class="columns margins" style="justify-content: flex-start;">
+  <FormField>
+    <Checkbox bind:checked={$showSampleVoices} />
+    <span slot="label">Show sample voices</span>
+  </FormField>
+  <FormField>
+    <Checkbox bind:checked={$showUserClonedVoices} />
+    <span slot="label">Show my cloned voices</span>
+  </FormField>
+  <div>
+    <ul>
+      {#each $voiceChoices as vc}
+        <li style="display: flex; align-items: center">
+          <div
+            style={`background-color: ${vc.color}; width: 15px; height: 15px; cursor: pointer;`}
+          />
+          &nbsp;
+          <span>{vc.name}</span>
+        </li>
+      {/each}
+    </ul>
+  </div>
   <div>
     <Select value={currentVoiceId} label="Select voice">
-      {#each $allVoices as voice}
+      {#each $voiceChoices as voice}
         <Option value={voice.voice_id} on:click={() => handleVoiceSelect(voice.voice_id)}>
           {voice.name}
         </Option>
@@ -31,3 +54,15 @@
     </Select>
   </div>
 </div>
+
+<style lang="scss">
+  ul {
+    columns: 2;
+    -webkit-columns: 2;
+    -moz-columns: 2;
+
+    li {
+      list-style-type: none;
+    }
+  }
+</style>

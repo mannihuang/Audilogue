@@ -3,9 +3,15 @@ interface IVoiceSettings {
     similarity_boost: number;
 }
 
+export enum VoiceCategory {
+    Sample = "premade",
+    UserCloned = "cloned",
+}
+
 export interface IRawVoice {
     voice_id: string;
     name: string;
+    category: VoiceCategory;
     settings: IVoiceSettings;
 }
 
