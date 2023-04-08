@@ -3,28 +3,26 @@
   import Button, { Label } from '@smui/button';
   import TextEditor from '../../components/pageComponents/workspace/TextEditor.svelte';
   import TextSelection from '../../components/pageComponents/workspace/TextSelection.svelte';
+  import { currentSpeech, selectedSpeeches } from '../../store/speeches';
+  import SpeechGeneration from '../../components/pageComponents/SpeechGeneration.svelte';
+  import VoiceSelection from '../../components/pageComponents/VoiceSelection.svelte';
 
-  let active = 'Gray Kittens';
-  let isDrawerOpen = false;
-
-  function setActive(value: string) {
-    active = value;
-  }
 </script>
 
 <div>
-  <Drawer variant="dismissible" open={isDrawerOpen} style="width: 300px">
-    <Header>
-      <Title>Super Drawer</Title>
-      <Subtitle>It's the best drawer.</Subtitle>
-    </Header>
-    <Content>
-        asdfd
-    </Content>
+  <Drawer variant="dismissible" open={$selectedSpeeches.length > 0} style="width: 300px">
+    <VoiceSelection></VoiceSelection>
+    {#if $selectedSpeeches.length == 1}
+      <Header>
+        <Title>{$currentSpeech.text}</Title>
+      </Header>
+      <Content>
+        <SpeechGeneration></SpeechGeneration>
+      </Content>
+    {/if}
   </Drawer>
 
   <AppContent class="app-content">
-    <Button on:click={() => isDrawerOpen = !isDrawerOpen}>Toggle</Button>
     <TextEditor></TextEditor>
     <TextSelection></TextSelection>
   </AppContent>

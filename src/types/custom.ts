@@ -1,4 +1,3 @@
-import type { Readable, Writable } from "svelte/store";
 import type { IRawVoice, IUserInfo } from "./ElevenLabs";
 
 export interface IErrorStore {
@@ -16,9 +15,26 @@ export interface IElevenLabsContext {
     eApi: IElevenLabsWrapper;
 }
 
+export interface IVoice extends IRawVoice {
+    color: string;
+}
+
+export interface IGeneration {
+    id: string;
+    voiceId: string;
+    audioUri: string;
+    // historyItemId;
+}
+
 export interface ISpeech {
     id: string;
     text: string;
+    isInSpeechMarks: boolean;
+    voiceId?: string;
+    stability?: number;
+    similarityBoost?: number;
+    currentGeneration?: IGeneration;
+    generationHistory: IGeneration[];
 }
 
 export interface IParagraph {

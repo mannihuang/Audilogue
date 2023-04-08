@@ -9,6 +9,7 @@
   import { ContextKeys } from '../../types/enums';
   import { setError } from '../../store/error';
   import { elevenlabsApiKey, allVoices, userSubscriptionInfo } from '../../store/user';
+  import { generateRandomHex } from '$lib/utils/random';
   let isFetching = false;
 
   async function handleSubmit() {
@@ -21,8 +22,8 @@
       const fetchedUserInfo = await eApi.getUserInfoAsync();
       const fetchedVoices = await eApi.getVoicesAsync();
       userSubscriptionInfo.set(fetchedUserInfo.subscription);
-      allVoices.set(fetchedVoices);
-      goto("/workspace");
+      allVoices.set(fetchedVoices.map((fvc) => ({ ...fvc, color: generateRandomHex() })));
+      goto('/workspace');
     } catch (getVoicesError) {
       setError(getVoicesError);
     } finally {
