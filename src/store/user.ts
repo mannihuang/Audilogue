@@ -1,8 +1,9 @@
 import { derived, writable } from 'svelte/store';
 import { VoiceCategory, type ISubscriptionInfo, type IUserInfo } from '../types/ElevenLabs';
-import type { IVoice } from '../types/custom';
+import type { IElevenLabsWrapper, IVoice } from '../types/custom';
 
 const elevenlabsApiKey = writable("");
+const eApi = writable<IElevenLabsWrapper>();
 // const userInfo = writable<IUserInfo>();
 const userSubscriptionInfo = writable<ISubscriptionInfo>();
 const allVoices = writable<IVoice[]>([]);
@@ -16,6 +17,7 @@ const voiceChoices = derived([allVoices, showSampleVoices, showUserClonedVoices]
 
 export {
     elevenlabsApiKey,
+    eApi,
     // userInfo,
     userSubscriptionInfo,
     allVoices,
