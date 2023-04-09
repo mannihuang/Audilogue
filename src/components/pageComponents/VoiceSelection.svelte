@@ -3,6 +3,7 @@
   import Checkbox from '@smui/checkbox';
   import FormField from '@smui/form-field';
   import Menu from '@smui/menu';
+  import Tooltip, { Wrapper } from '@smui/tooltip';
   import { voiceChoices, showSampleVoices, showUserClonedVoices, updateVoice } from '../../store/user';
   import { currentSpeech, selectedSpeeches, updateSpeechData } from '../../store/speeches';
   import { onDestroy } from 'svelte';
@@ -47,7 +48,7 @@
   }
 </script>
 
-<div style="display: flex; flex-direction: column; justify-content: center; padding: 15px">
+<div style="display: flex; flex-direction: column; justify-content: center;">
   <FormField>
     <Checkbox bind:checked={$showSampleVoices} />
     <span slot="label">Show sample voices</span>
@@ -60,13 +61,20 @@
     <ul>
       {#each $voiceChoices as vc}
         <li style="display: flex; align-items: center">
-          <div
-            style={`background-color: ${vc.color}; width: 15px; height: 15px; cursor: pointer;`}
-            on:click={(event) => handleClickOnVoiceColor(event, vc)}
-            bind:this={colorPickerMenuAnchor}
-          />
-          &nbsp;
-          <span class="mdc-typography--body1">{vc.name}</span>
+          <Wrapper>
+            <div
+              on:click={(event) => handleClickOnVoiceColor(event, vc)}
+              style="cursor: pointer; display: flex; align-items: center;"
+            >
+              <div style={`background-color: ${vc.color}; width: 15px; height: 15px;`} />
+              &nbsp;
+              <span class="mdc-typography--body1">{vc.name}</span>
+            </div>
+
+            <Tooltip xPos="end" yPos="above">
+              Click to change color
+            </Tooltip>
+          </Wrapper>
           <Menu
             bind:this={colorPickerMenu}
             anchor={false}

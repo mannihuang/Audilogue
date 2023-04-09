@@ -55,16 +55,16 @@
       <Section align="end" toolbar>
         {#if isDarkMode}
           <Wrapper>
-            <IconButton class="material-icons" aria-label="Light mode" on:click={toggleDarkMode}
-              >light_mode</IconButton
-            >
+            <IconButton class="material-icons" aria-label="Light mode" on:click={toggleDarkMode}>
+              light_mode
+            </IconButton>
             <Tooltip xPos="start">Change to light mode</Tooltip>
           </Wrapper>
         {:else}
           <Wrapper>
-            <IconButton class="material-icons" aria-label="Dark mode" on:click={toggleDarkMode}
-              >dark_mode</IconButton
-            >
+            <IconButton class="material-icons" aria-label="Dark mode" on:click={toggleDarkMode}>
+              dark_mode
+            </IconButton>
             <Tooltip xPos="start">Change to dark mode</Tooltip>
           </Wrapper>
         {/if}

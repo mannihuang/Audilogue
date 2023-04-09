@@ -36,7 +36,13 @@
   }
 </script>
 
-<div style="margin-bottom: 40px; display: flex; flex-direction: column; gap: 10px;">
+<div style="display: flex; flex-direction: column; gap: 10px;">
   <Textfield textarea bind:value={inputText} label="Story text" style="width: 100%" input$rows={8}/>
-  <Button on:click={handleClickParse} variant="unelevated" style="width: 100px">Parse</Button>
+  <div style="display: flex; align-items: center">
+    <Button on:click={handleClickParse} variant="unelevated" style="width: 100px">Parse</Button>
+    {#if $speeches.some(sp => !!sp.voiceId)}
+      &nbsp; &nbsp;
+      <span class="mdc-typography--body1" style="color: red">Warning: Click "parse" again will erase your current work</span>
+    {/if}
+  </div>
 </div>
