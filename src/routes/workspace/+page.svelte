@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Drawer, { AppContent, Content, Header, Title, Subtitle } from '@smui/drawer';
-  import Button, { Label } from '@smui/button';
+  import Drawer, { AppContent, Content, Header, Title } from '@smui/drawer';
   import TextEditor from '../../components/pageComponents/workspace/TextEditor.svelte';
   import TextSelection from '../../components/pageComponents/workspace/TextSelection.svelte';
   import { currentSpeech, selectedSpeeches } from '../../store/speeches';
@@ -34,6 +33,7 @@
     overflow: auto;
     position: relative;
     flex-grow: 1;
-    padding-left: 50px;
+    padding: 50px;
+    padding-left: 90px;
   }
 </style>

@@ -50,12 +50,13 @@
             <span
               on:click={(event) => handleSpeechSelect(event, pgsp)}
               style={`${getSpeechStyling(pgsp)}`}
+              class="mdc-typography--body1"
             >
               {pgsp.text}
             </span>
           {/key}
         {:else}
-          <span>{pgsp.text}</span>
+          <span class="mdc-typography--body1">{pgsp.text}</span>
         {/if}
       {/each}
     </p>

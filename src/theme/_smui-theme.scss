@@ -3,8 +3,8 @@
 $background: #fff;
 
 @use '@material/theme/index' as theme with (
-  $primary: color-palette.$purple-500,
-  $secondary: color-palette.$teal-600,
+  $primary: #19376D,
+  $secondary: #0B2447,
   $surface: #fff,
   $background: $background,
   $error: #b00020
@@ -14,6 +14,7 @@ html,
 body {
   background-color: $background;
   color: if(theme.contrast-tone($background) == 'dark', #000, #fff);
+  margin: 0px !important;
 }
 
 a {

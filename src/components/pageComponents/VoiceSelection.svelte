@@ -22,7 +22,7 @@
   }
 </script>
 
-<div class="columns margins" style="justify-content: flex-start;">
+<div style="display: flex; flex-direction: column; justify-content: center; padding: 15px">
   <FormField>
     <Checkbox bind:checked={$showSampleVoices} />
     <span slot="label">Show sample voices</span>
@@ -39,20 +39,18 @@
             style={`background-color: ${vc.color}; width: 15px; height: 15px; cursor: pointer;`}
           />
           &nbsp;
-          <span>{vc.name}</span>
+          <span class="mdc-typography--body1">{vc.name}</span>
         </li>
       {/each}
     </ul>
   </div>
-  <div>
-    <Select value={currentVoiceId} label="Select voice">
-      {#each $voiceChoices as voice}
-        <Option value={voice.voice_id} on:click={() => handleVoiceSelect(voice.voice_id)}>
-          {voice.name}
-        </Option>
-      {/each}
-    </Select>
-  </div>
+  <Select value={currentVoiceId} label="Select voice">
+    {#each $voiceChoices as voice}
+      <Option value={voice.voice_id} on:click={() => handleVoiceSelect(voice.voice_id)}>
+        {voice.name}
+      </Option>
+    {/each}
+  </Select>
 </div>
 
 <style lang="scss">

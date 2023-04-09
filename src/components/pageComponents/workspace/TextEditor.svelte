@@ -36,7 +36,7 @@
   }
 </script>
 
-<div class="margins">
+<div style="margin-bottom: 40px; display: flex; flex-direction: column; gap: 10px;">
   <Textfield textarea bind:value={inputText} label="Story text" style="width: 100%" input$rows={8}/>
-  <Button on:click={handleClickParse} variant="unelevated">Parse</Button>
+  <Button on:click={handleClickParse} variant="unelevated" style="width: 100px">Parse</Button>
 </div>
