@@ -1,6 +1,8 @@
 import { derived, get, writable } from "svelte/store";
 import type { ISpeech, IParagraph } from "../types/custom";
 import { trimText } from "$lib/utils/text";
+import { v4 as uuidv4 } from "uuid";
+import { allVoices } from "./user";
 
 const paragraphs = writable<IParagraph[]>([]);
 const speeches = writable<ISpeech[]>([]);
@@ -47,6 +49,27 @@ function removeFromSelectedSpeeches(speechId: string) {
     selectedSpeeches.update(oldArr => oldArr.filter(sp => sp.id != speechId));
 }
 
+function appendToGenerationHistory(speechId: string, audioUri: string) {
+    const foundSpeech = get(speeches).find(sp => sp.id == speechId);
+    if(!foundSpeech) {
+        throw new Error("Speech not found");
+    }
+    const voiceName = get(allVoices).find(vc => vc.voice_id == foundSpeech.voiceId)?.name;
+    const newgenId = `${voiceName} - ${uuidv4()}`;
+    const newGen = {
+        id: newgenId,
+        audioUri,
+        voiceId: foundSpeech.voiceId!,
+    }
+    updateSpeechData(speechId, {
+        currentGeneration: newGen,
+        generationHistory: [
+            ...foundSpeech.generationHistory,
+            newGen,
+        ]
+    })
+}
+
 export {
     paragraphs,
     speeches,
@@ -57,4 +80,5 @@ export {
     selectedSpeeches,
     appendToSelectedSpeeches,
     removeFromSelectedSpeeches,
+    appendToGenerationHistory,
 }
