@@ -4,7 +4,7 @@
   import Button, { Label, Icon } from '@smui/button';
   import TextEditor from '../../components/pageComponents/workspace/TextEditor.svelte';
   import TextSelection from '../../components/pageComponents/workspace/TextSelection.svelte';
-  import { currentSpeechText, paragraphs, selectedSpeeches } from '../../store/speeches';
+  import { currentSpeechText, paragraphs, selectedSpeeches, speeches } from '../../store/speeches';
   import SpeechGeneration from '../../components/pageComponents/SpeechGeneration.svelte';
   import VoiceSelection from '../../components/pageComponents/VoiceSelection.svelte';
   import PlayAll from '../../components/pageComponents/workspace/PlayAll.svelte';
@@ -68,10 +68,12 @@
         <div class="custom-divider" />
         <TextSelection />
         <div class="custom-divider" />
-        <PlayAll />
-        <br />
-        <DownloadAll />
-        <div class="custom-divider" />
+        {#if $speeches.some(sp => sp.generationHistory.length > 0)}
+          <PlayAll />
+          <br />
+          <DownloadAll />
+          <div class="custom-divider" />
+        {/if}
       {/if}
       <ImportExport />
     </Card>

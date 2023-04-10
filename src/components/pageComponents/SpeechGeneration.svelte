@@ -4,13 +4,20 @@
   import Textfield from '@smui/textfield';
   import Select, { Option } from '@smui/select';
   import Button from '@smui/button/src/Button.svelte';
-  import { eApi, userSubscriptionInfo } from '../../store/user';
+  import { allVoices, eApi, userSubscriptionInfo } from '../../store/user';
   import { setError } from '../../store/error';
   import { appendToGenerationHistory, currentSpeech, currentSpeechText, updateSpeechData } from '../../store/speeches';
   import { getAudioUri, setAndPlayAudio } from '$lib/utils/audio';
+  const DEFAULT_STABIILTY = 0;
+  const DEFAULT_SIMILARITY_BOOST = 0;
 
-  let stabilityValue = 50;
-  let similarityBoostValue = 50;
+  let stabilityValue = 0;
+  let similarityBoostValue = 0;
+
+  currentSpeech.subscribe(speechUpdated => {
+    stabilityValue = Math.round(($allVoices.find(vc => vc.voice_id == speechUpdated.voiceId)?.settings.stability || DEFAULT_STABIILTY) * 100);
+    similarityBoostValue = Math.round(($allVoices.find(vc => vc.voice_id == speechUpdated.voiceId)?.settings.similarity_boost || DEFAULT_SIMILARITY_BOOST) * 100);
+  })
 
   async function handleClickGenerate() {
     console.log('Clicked generate...');
@@ -72,13 +79,15 @@
 
   <audio id="genPlayer" controls style="align-self: center" />
 
-  {#key $currentSpeech.id}
-    <Select value={$currentSpeech.currentGeneration?.id} label="Select generation">
-      {#each $currentSpeech.generationHistory as gen}
-        <Option value={gen.id} on:click={() => handleGenerationSelection(gen.id)}>
-          {gen.id}
-        </Option>
-      {/each}
-    </Select>
-  {/key}
+  {#if $currentSpeech.generationHistory.length > 0}  
+    {#key $currentSpeech.id}
+      <Select value={$currentSpeech.currentGeneration?.id} label="Select generation">
+        {#each $currentSpeech.generationHistory as gen}
+          <Option value={gen.id} on:click={() => handleGenerationSelection(gen.id)}>
+            {gen.id}
+          </Option>
+        {/each}
+      </Select>
+    {/key}    
+  {/if}
 </div>
