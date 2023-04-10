@@ -32,13 +32,14 @@
       );
       console.log({ rawAudioData });
       const audioUri = getAudioUri(rawAudioData);
-      // console.log({ audioUri });
+      console.log({ audioUri });
       setAndPlayAudio("#genPlayer", audioUri);
       appendToGenerationHistory($currentSpeech.id, audioUri);
       // Get user info again to update characters remaining
       const fetchedUserInfo = await $eApi.getUserInfoAsync();
       userSubscriptionInfo.set(fetchedUserInfo.subscription);
     } catch (generateAudioError) {
+      console.error({ generateAudioError });
       setError(generateAudioError);
     }
   }
