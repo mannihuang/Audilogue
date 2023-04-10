@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte';
   import TopAppBar, { Row, Section, Title } from '@smui/top-app-bar';
   import IconButton from '@smui/icon-button';
@@ -6,21 +6,35 @@
   import ErrorDisplay from '../components/global/ErrorDisplay.svelte';
   import { allVoices, userSubscriptionInfo } from '../store/user';
   import { LocalStorageKeys, readFromLocalStorage, saveToLocalStorage } from '$lib/utils/storage';
+  import { paragraphs, speeches } from '../store/speeches';
+  import type { ISpeech } from '../types/custom';
 
   let isDarkMode = false;
 
   onMount(() => {
     const loadedSubscriptionInfo = readFromLocalStorage(LocalStorageKeys.SubscriptionInfo);
     const loadedVoices = readFromLocalStorage(LocalStorageKeys.Voices);
+    const loadedParagraphs = readFromLocalStorage(LocalStorageKeys.Paragraphs);
 
     userSubscriptionInfo.set(loadedSubscriptionInfo);
     allVoices.set(loadedVoices);
+    paragraphs.set(loadedParagraphs);
 
     userSubscriptionInfo.subscribe((newSubInfo) => {
       saveToLocalStorage(LocalStorageKeys.SubscriptionInfo, newSubInfo);
     });
     allVoices.subscribe((newVoicesArr) => {
       saveToLocalStorage(LocalStorageKeys.Voices, newVoicesArr);
+    });
+
+    paragraphs.subscribe((newParagraphs) => {
+      saveToLocalStorage(LocalStorageKeys.Paragraphs, newParagraphs);
+      speeches.set(
+        $paragraphs.reduce(
+          (accumulatedSpeeches, currentPara) => [...accumulatedSpeeches, ...currentPara.speeches],
+          [] as ISpeech[]
+        )
+      );
     });
   });
 

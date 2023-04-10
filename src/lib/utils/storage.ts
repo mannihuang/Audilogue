@@ -1,6 +1,7 @@
 enum LocalStorageKeys {
     Voices = "Voices",
     SubscriptionInfo = "SubscriptionInfo",
+    Paragraphs = "Paragraphs",
 }
 
 function saveToLocalStorage(key: LocalStorageKeys, data: any) {

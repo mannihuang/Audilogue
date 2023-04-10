@@ -3,7 +3,6 @@
   import Textfield from '@smui/textfield';
   import { paragraphs, speeches } from '../../../store/speeches';
 	import { v4 as uuidv4 } from "uuid";
-  import type { ISpeech } from '../../../types/custom';
 
   let inputText = '"What should I type?" asked Susan, eyeing the empty text field.\n"Your own story," replied John.\n"Got it. Thanks," Susan said.\n"No problem. Remember, this is just some sample text," John advised.\nWith that, Susan began to type, letting her own ideas and voice take over.';
 
@@ -27,12 +26,6 @@
         }),
       }
     }))
-    speeches.set(
-      $paragraphs.reduce(
-        (accumulatedSpeeches, currentPara) => [...accumulatedSpeeches, ...currentPara.speeches],
-        [] as ISpeech[]
-      )
-    );
   }
 </script>
 
