@@ -10,6 +10,7 @@
   import VoiceSelection from '../../components/pageComponents/VoiceSelection.svelte';
   import PlayAll from '../../components/pageComponents/workspace/PlayAll.svelte';
   import DownloadAll from '../../components/pageComponents/workspace/DownloadAll.svelte';
+  import Usage from '../../components/pageComponents/Usage.svelte';
 </script>
 
 <div>
@@ -18,6 +19,7 @@
     open={$selectedSpeeches.length > 0}
     style="width: 350px; padding: 15px;"
   >
+    <Usage />
     <VoiceSelection />
     {#if $selectedSpeeches.length == 1}
       <Header style="text-align: center;">
