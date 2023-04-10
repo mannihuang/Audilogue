@@ -3,9 +3,9 @@ function getAudioUri(audioData: ArrayBuffer) {
   return `data:audio/mpeg;base64,${base64Data}`;
 }
 
-function setAndPlayAudio(elementSelector: string, audioSrc: string) {
+function setAndPlayAudio(elementSelector: string, audioSrc: string): HTMLAudioElement {
   if(!elementSelector.startsWith("#")) {
-    return;
+    throw new Error("Selector not an id");
   }
   const id = elementSelector.substring(1);
   const player = document.getElementById(id) as HTMLAudioElement;
@@ -13,6 +13,7 @@ function setAndPlayAudio(elementSelector: string, audioSrc: string) {
   setTimeout(() => {
     player.play();
   }, 1200);
+  return player;
 }
 
 export { getAudioUri, setAndPlayAudio };

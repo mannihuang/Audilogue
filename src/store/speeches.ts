@@ -17,6 +17,7 @@ function setCurrentSpeech(speechId: string) {
     console.log({ index })
     currentSpeechIndex.set(index);
     console.log({ currentSpeech: get(currentSpeech)})
+    selectedSpeeches.set([ get(currentSpeech) ]);
 }
 
 type IPartialSpeech = {
