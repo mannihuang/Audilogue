@@ -1,11 +1,13 @@
 import { derived, get, writable } from "svelte/store";
 import type { ISpeech, IParagraph } from "../types/custom";
+import { trimText } from "$lib/utils/text";
 
 const paragraphs = writable<IParagraph[]>([]);
 const speeches = writable<ISpeech[]>([]);
 
 const currentSpeechIndex = writable<number>();
 const currentSpeech = derived([speeches, currentSpeechIndex], ([$speeches, $currentSpeechIndex]) => $speeches[$currentSpeechIndex]);
+const currentSpeechText = derived([currentSpeech], ([$currentSpeech]) => trimText($currentSpeech?.text || ''));
 function setCurrentSpeech(speechId: string) {
     console.log({ speechId })
     console.log({ speeches: get(speeches) })
@@ -49,6 +51,7 @@ export {
     paragraphs,
     speeches,
     currentSpeech,
+    currentSpeechText,
     setCurrentSpeech,
     updateSpeechData,
     selectedSpeeches,

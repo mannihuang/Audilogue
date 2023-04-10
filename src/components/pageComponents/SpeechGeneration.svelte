@@ -5,7 +5,7 @@
   import Button from '@smui/button/src/Button.svelte';
   import { eApi } from '../../store/user';
   import { setError } from '../../store/error';
-  import { currentSpeech } from '../../store/speeches';
+  import { currentSpeech, currentSpeechText } from '../../store/speeches';
 
   let stabilityValue = 50;
   let similarityBoostValue = 50;
@@ -14,12 +14,15 @@
   async function handleClickGenerate() {
     console.log('Clicked generate...');
     try {
-      const rawAudioData = await $eApi.textToSpeechAsync($currentSpeech.voiceId || "", $currentSpeech.text, {
-        stability: stabilityValue / 100,
-        similarity_boost: similarityBoostValue / 100
-      });
+      const rawAudioData = await $eApi.textToSpeechAsync(
+        $currentSpeech.voiceId || '',
+        $currentSpeechText,
+        {
+          stability: stabilityValue / 100,
+          similarity_boost: similarityBoostValue / 100
+        }
+      );
       console.log({ rawAudioData });
-
     } catch (generateAudioError) {
       setError(generateAudioError);
     }
@@ -42,7 +45,12 @@
     />
   </FormField>
 
-  <Button on:click={handleClickGenerate} variant="unelevated" style="border-radius: 50px">
+  <Button
+    on:click={handleClickGenerate}
+    variant="unelevated"
+    style="border-radius: 50px"
+    disabled={!$currentSpeech.voiceId}
+  >
     Generate
   </Button>
 

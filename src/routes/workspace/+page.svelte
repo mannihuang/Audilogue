@@ -4,7 +4,7 @@
   import Button, { Label, Icon } from '@smui/button';
   import TextEditor from '../../components/pageComponents/workspace/TextEditor.svelte';
   import TextSelection from '../../components/pageComponents/workspace/TextSelection.svelte';
-  import { currentSpeech, paragraphs, selectedSpeeches } from '../../store/speeches';
+  import { currentSpeechText, paragraphs, selectedSpeeches } from '../../store/speeches';
   import SpeechGeneration from '../../components/pageComponents/SpeechGeneration.svelte';
   import VoiceSelection from '../../components/pageComponents/VoiceSelection.svelte';
   import PlayAll from '../../components/pageComponents/workspace/PlayAll.svelte';
@@ -35,7 +35,8 @@
     <VoiceSelection />
     {#if $selectedSpeeches.length == 1}
       <Header style="text-align: center;">
-        <Title>{$currentSpeech.text}</Title>
+        <Title>{$currentSpeechText}</Title>
+        <span>({$currentSpeechText.length} characters)</span>
       </Header>
       <Content>
         <SpeechGeneration />
