@@ -18,7 +18,15 @@
       const fetchedUserInfo = await $eApi.getUserInfoAsync();
       const fetchedVoices = await $eApi.getVoicesAsync();
       userSubscriptionInfo.set(fetchedUserInfo.subscription);
-      allVoices.set(fetchedVoices.map((fvc) => ({ ...fvc, color: generateRandomHex() })));
+      allVoices.set(
+        fetchedVoices.map((fvc) => {
+          const voiceLocal = $allVoices.find(vc => vc.voice_id == fvc.voice_id);
+          return {
+            ...fvc,
+            color: voiceLocal?.color || generateRandomHex(),
+          };
+        })
+      );
       goto('/workspace');
     } catch (getVoicesError) {
       setError(getVoicesError);
@@ -73,19 +81,21 @@
         <li>Paste your API key in the input area above.</li>
       </ol>
       <div style="width: 100%">
-        <span style="text-decoration: underline;">
-          Notes and disclaimers
-        </span>
+        <span style="text-decoration: underline;"> Notes and disclaimers </span>
         <br />
         <ul>
           <li>
-            Source code for this project is available <a href="https://github.com/mannihuang/Audilogue">here</a>.
+            Source code for this project is available
+            <a href="https://github.com/mannihuang/Audilogue">here</a>.
           </li>
           <li>
-            Using your own API key, means that each audio generation will consume characters from your account usage.
+            Using your own API key, means that each audio generation will consume characters from
+            your account usage.
           </li>
           <li>
-            Audilogue is a tool for simplifying the repeitive nature of generating audio with ElevenLabs. We are not responsible for your audio generations and what you may choose to use such audio for.
+            Audilogue is a tool for simplifying the repeitive nature of generating audio with
+            ElevenLabs. We are not responsible for your audio generations and what you may choose to
+            use such audio for.
           </li>
         </ul>
       </div>

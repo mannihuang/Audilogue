@@ -1,8 +1,7 @@
 <script lang="ts">
   import Drawer, { AppContent, Content, Header, Title } from '@smui/drawer';
   import Card from '@smui/card';
-  import IconButton from '@smui/icon-button';
-  import Tooltip, { Wrapper } from '@smui/tooltip';
+  import Button, { Label, Icon } from '@smui/button';
   import TextEditor from '../../components/pageComponents/workspace/TextEditor.svelte';
   import TextSelection from '../../components/pageComponents/workspace/TextSelection.svelte';
   import { currentSpeech, selectedSpeeches } from '../../store/speeches';
@@ -11,6 +10,18 @@
   import PlayAll from '../../components/pageComponents/workspace/PlayAll.svelte';
   import DownloadAll from '../../components/pageComponents/workspace/DownloadAll.svelte';
   import Usage from '../../components/pageComponents/Usage.svelte';
+  import { goto } from '$app/navigation';
+  import { eApi } from '../../store/user';
+  import { PAGE_URLS } from '../../types/enums';
+  import { onMount } from 'svelte';
+  
+  onMount(() => {
+    if(!$eApi) {
+      goto(PAGE_URLS.LOGIN);
+    }    
+  })
+
+  let showTips = false;
 </script>
 
 <div>
@@ -37,14 +48,25 @@
     </Card>
     <br />
     <Card style="padding: 20px">
-      <div class="mdc-typography--body1">
-        <Wrapper>
-          <IconButton class="material-icons" title="Tip">tips_and_updates</IconButton>
-          <Tooltip xPos="end" yPos="above">
-            Hold Ctrl/Cmd and click to select multiple lines
-          </Tooltip>
-        </Wrapper>
+      <div class="mdc-typography--body1" style="display: flex; gap: 10px; align-items: center;">
+          <Button on:click={() => showTips = !showTips} variant="outlined">
+            <Icon class="material-icons">tips_and_updates</Icon>
+            <Label>Tips</Label>
+          </Button>
+          {#if showTips}
+            <div>
+              <ul>
+                <li>
+                  Hold Ctrl/Cmd and click to select multiple lines
+                </li>
+                <li>
+                  You can change the color for voices, by clicking on them in the legend.
+                </li>
+              </ul>
+            </div>
+          {/if}
       </div>
+      <div class="custom-divider" />
       <TextSelection />
       <div class="custom-divider" />
       <PlayAll />

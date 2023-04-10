@@ -1,11 +1,15 @@
 <script>
-	import Button, { Label } from '@smui/button';
+  import { eApi } from '../store/user';
+  import { goto } from '$app/navigation';
+  import { PAGE_URLS } from '../types/enums';
+  import { onMount } from 'svelte';
+  onMount(() => {
+    if (!$eApi) {
+      goto(PAGE_URLS.LOGIN);
+    } else {
+      goto(PAGE_URLS.WORKSPACE);
+    }
+  });
 </script>
 
-<svelte:head>
-	<title>Audilogue</title>
-</svelte:head>
-
-<div>
-	<Button>Hello</Button>
-</div>
+<div class="mdc-typography--body1">Redirecting...</div>
