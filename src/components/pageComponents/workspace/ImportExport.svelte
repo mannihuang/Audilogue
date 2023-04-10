@@ -22,11 +22,11 @@
   }
 
   function handleClickImport() {
-    const input = document.getElementById('file-input');
-    input?.click();
+    const input = document.getElementById('file-input') as HTMLInputElement;
+    input.click();
 
     input.addEventListener('change', function () {
-      readFileAsTextAsync(this.files[0]).then(redFileResponse => {
+      readFileAsTextAsync(this.files![0]).then(redFileResponse => {
         console.log({ redFileResponse })
         const importedDataJSON = JSON.parse(redFileResponse);
         console.log({ importedDataJSON });
