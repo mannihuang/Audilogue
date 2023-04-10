@@ -4,12 +4,13 @@
   import { globalError } from '../../store/error';
 
   let errorSnackbar: Snackbar;
-  globalError.subscribe(updatedError => {
+  globalError.subscribe((updatedError) => {
     errorSnackbar?.open();
-  })
+  });
 </script>
 
 <Snackbar bind:this={errorSnackbar}>
+  <IconButton class="material-icons" disabled style="color: red; padding-right: 0;">error</IconButton>
   <Label>{$globalError.errorMessage}</Label>
   <Actions>
     <IconButton class="material-icons" title="Dismiss">close</IconButton>
