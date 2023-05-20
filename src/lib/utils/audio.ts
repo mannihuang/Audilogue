@@ -16,4 +16,32 @@ function setAndPlayAudio(elementSelector: string, audioSrc: string): HTMLAudioEl
   return player;
 }
 
-export { getAudioUri, setAndPlayAudio };
+function cutAudio(audioBuffer: AudioBuffer, start: number, end: number): AudioBuffer {
+  const audioContext = new AudioContext();
+  const channels = audioBuffer.numberOfChannels;
+  const sampleRate = audioBuffer.sampleRate;
+
+  // Calculate the start and end sample positions
+  const startSample = Math.floor(start * sampleRate);
+  const endSample = Math.floor(end * sampleRate);
+
+  // Calculate the duration of the cut audio
+  const duration = end - start;
+
+  // Create a new AudioBuffer for the cut audio
+  const cutBuffer = audioContext.createBuffer(channels, duration * sampleRate, sampleRate);
+
+  // Copy the samples from the original buffer to the cut buffer
+  for (let channel = 0; channel < channels; channel++) {
+    const originalData = audioBuffer.getChannelData(channel);
+    const cutData = cutBuffer.getChannelData(channel);
+
+    for (let i = startSample, j = 0; i < endSample; i++, j++) {
+      cutData[j] = originalData[i];
+    }
+  }
+
+  return cutBuffer;
+}
+
+export { getAudioUri, setAndPlayAudio, cutAudio };

@@ -1,0 +1,55 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { setError } from '../../store/error';
+  import axios from 'axios';
+  import { cutAudio } from '$lib/utils/audio';
+
+  let audioContext: AudioContext;
+
+  async function fetchAudio(url: string) {
+    try {
+      const fetchAudioResponse = await axios.get(url, {
+        headers: {
+          Accept: 'audio/mpeg'
+        },
+        responseType: 'arraybuffer'
+      });
+      console.log({ fetchAudioResponse });
+      return fetchAudioResponse.data;
+    } catch (fetchAudioError) {
+      console.error({ fetchAudioError });
+      setError(fetchAudioError);
+    }
+  }
+
+  async function playAudio() {
+    const audioSrc = document.getElementById('originalAudio')?.getAttribute('src') || '';
+    console.log({ audioSrc });
+    const audioData = await fetchAudio(audioSrc);
+    console.log({ audioData });
+    const originalAudioBuffer = await audioContext.decodeAudioData(audioData);
+    const returnedAudioBuffer = cutAudio(originalAudioBuffer, 62, 67);
+
+    console.log('Got the decoded buffer now play the song', returnedAudioBuffer);
+    const newSource = audioContext.createBufferSource();
+    newSource.buffer = returnedAudioBuffer;
+    newSource.connect(audioContext.destination);
+    newSource.loop = true;
+    newSource.start();
+  }
+
+  onMount(() => {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  });
+</script>
+
+<div>
+  hello
+  <audio
+    id="originalAudio"
+    controls
+    src="https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp3"
+  />
+  <audio id="copiedAudio" controls />
+  <button on:click={playAudio}> Play </button>
+</div>
