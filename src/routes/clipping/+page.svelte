@@ -11,6 +11,9 @@
   let duration: number = 0;
   let currentTime: number = 0;
   let hoverTime: number = 0;
+  let audioSegments: Player<WaveSurferEvents>[];
+  let audioArrayBuffer: ArrayBuffer;
+
   let playAudio = () => {};
   let stopAudio = () => {};
   let pauseAudio = () => {};
@@ -19,46 +22,66 @@
   let splitCurrentAudio = () => {};
 
   onMount(async () => {
-    wsurfer1 = WaveSurfer.create({
-      container: `#waveform`,
-      waveColor: 'violet',
-      progressColor: 'purple'
-    });
+    // const audio = new Audio();
+    // audio.controls = true;
+    // audio.src = '/examples/audio/audio.wav';
+    const url = 'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3';
+    try {
+      const fetchAudioResponse = await axios.get(url, {
+        headers: {
+          'Content-Type': 'audio/mpeg'
+        },
+        responseType: 'arraybuffer'
+      });
+      console.log({ fetchAudioResponse });
+      audioArrayBuffer = fetchAudioResponse.data;
+      const blobUrl = URL.createObjectURL(new Blob([audioArrayBuffer]));
+      console.log({ blobUrl });
+      const wsurfer1 = WaveSurfer.create({
+        container: `#waveform`,
+        waveColor: 'violet',
+        progressColor: 'purple',
+      });
 
-    await wsurfer1.load(
-      'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3'
-    );
-    duration = wsurfer1.getDuration();
-    playAudio = () => {
-      wsurfer1.play();
-    };
-    stopAudio = () => {
-      wsurfer1.stop();
-    };
-    pauseAudio = () => {
-      wsurfer1.pause();
-    };
+      console.log({ audioArrayBuffer });
+      await wsurfer1.load(blobUrl);
 
-    seekStartAudio = () => {
-      wsurfer1.seekTo(0);
-    };
+      duration = wsurfer1.getDuration();
+      playAudio = () => {
+        wsurfer1.play();
+      };
+      stopAudio = () => {
+        wsurfer1.stop();
+      };
+      pauseAudio = () => {
+        wsurfer1.pause();
+      };
 
-    seekEndAudio = () => {
-      wsurfer1.seekTo(1);
-    };
+      seekStartAudio = () => {
+        wsurfer1.seekTo(0);
+      };
 
-    splitCurrentAudio = () => {
-      console.log('SPLITTING');
-    };
+      seekEndAudio = () => {
+        wsurfer1.seekTo(1);
+      };
 
-    wsurfer1.on('timeupdate', (newTime: number) => {
-      currentTime = newTime;
-      hoverTime = newTime;
-    });
+      splitCurrentAudio = () => {
+        console.log('SPLITTING');
+        // audioSegments.push(wsurfer1);
+      };
 
-    wsurfer1.on('drag', (relativeX: number) => {
-      hoverTime = relativeX * duration;
-    });
+      wsurfer1.on('timeupdate', (newTime: number) => {
+        currentTime = newTime;
+        hoverTime = newTime;
+      });
+
+      wsurfer1.on('drag', (relativeX: number) => {
+        hoverTime = relativeX * duration;
+      });
+    } catch (fetchAudioError) {
+      console.error({ fetchAudioError });
+      setError(fetchAudioError);
+    }
   });
 
   async function fetchAudio(url: string) {
