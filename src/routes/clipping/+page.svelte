@@ -10,7 +10,11 @@
     try {
       const fetchAudioResponse = await axios.get(url, {
         headers: {
-          Accept: 'audio/mpeg'
+          Accept: 'audio/mpeg',
+          'Access-Control-Allow-Origin': '*',
+          // 'Access-Control-Allow-Headers': '*',
+          // 'Access-Control-Allow-Methods': 'DELETE, POST, GET, OPTIONS',
+          // 'Access-Control-Allow-Credentials':  'true'
         },
         responseType: 'arraybuffer'
       });
@@ -28,7 +32,7 @@
     const audioData = await fetchAudio(audioSrc);
     console.log({ audioData });
     const originalAudioBuffer = await audioContext.decodeAudioData(audioData);
-    const returnedAudioBuffer = cutAudio(originalAudioBuffer, 62, 67);
+    const returnedAudioBuffer = cutAudio(originalAudioBuffer, 15, 20);
 
     console.log('Got the decoded buffer now play the song', returnedAudioBuffer);
     const newSource = audioContext.createBufferSource();
@@ -46,7 +50,7 @@
         waveColor: 'violet',
         progressColor: 'purple'
       });
-      audio.load('https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp3');
+      audio.load('https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3');
     } catch (error) {
       console.error(error);
     }
@@ -63,7 +67,7 @@
   <audio
     id="originalAudio"
     controls
-    src="https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp3"
+    src="https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3"
   />
   <audio id="copiedAudio" controls />
   <button on:click={playAudio}> Play </button>
