@@ -58,6 +58,6 @@
 		"color-picker-svelte": "^1.1.1",
 		"jszip": "^3.10.1",
 		"uuid": "^9.0.0",
-		"wavesurfer.js": "^6.6.3"
+		"wavesurfer.js": "^7.0.0-beta.5"
 	}
 }
