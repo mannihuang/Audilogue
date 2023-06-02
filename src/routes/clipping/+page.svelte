@@ -38,8 +38,23 @@
     newSource.start();
   }
 
+  const initProgress = async () => {
+    try {
+      const waveSurfer = (await import('wavesurfer.js')).default;
+      const audio = waveSurfer.create({
+        container: `#waveform`,
+        waveColor: 'violet',
+        progressColor: 'purple'
+      });
+      audio.load('https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.mp3');
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   onMount(() => {
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    initProgress();
   });
 </script>
 
@@ -52,4 +67,5 @@
   />
   <audio id="copiedAudio" controls />
   <button on:click={playAudio}> Play </button>
+  <div id="waveform" />
 </div>
