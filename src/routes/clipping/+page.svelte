@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { setError } from '../../store/error';
   import axios from 'axios';
-  import { cutAudio } from '$lib/utils/audio';
+  import { cutAudio, audioBufferToBlob } from '$lib/utils/audio';
   import WaveSurfer, { type WaveSurferEvents } from 'wavesurfer.js';
   import type Player from 'wavesurfer.js/dist/player';
 
@@ -11,7 +11,7 @@
   let duration: number = 0;
   let currentTime: number = 0;
   let hoverTime: number = 0;
-  let audioSegments: Player<WaveSurferEvents>[];
+  let audioSegments: Player<WaveSurferEvents>[] = [];
   let audioArrayBuffer: ArrayBuffer;
 
   let playAudio = () => {};
@@ -22,12 +22,28 @@
   let splitCurrentAudio = () => {};
 
   onMount(async () => {
-    // const audio = new Audio();
-    // audio.controls = true;
-    // audio.src = '/examples/audio/audio.wav';
-    const url = 'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3';
+    async function createNewWavAsync(audioUrl: string) {
+      const newWaveContainerId = `#waveform-${Math.floor(Math.random() * 10000000)}`;
+      const newWaveContainer = document.createElement('div');
+      newWaveContainer.id = newWaveContainerId;
+      document.getElementById('wavesSection')?.appendChild(newWaveContainer);
+      // setTimeout(async () => {
+      const newWavSuf = WaveSurfer.create({
+        container: newWaveContainer,
+        waveColor: 'violet',
+        progressColor: 'purple'
+      });
+      // newWavSuf.on('interaction', () => {
+      //   newWavSuf.play();
+      // });
+      await newWavSuf.load(audioUrl);
+      return newWavSuf;
+    }
+
+    const ogAudioUrl =
+      'https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3';
     try {
-      const fetchAudioResponse = await axios.get(url, {
+      const fetchAudioResponse = await axios.get(ogAudioUrl, {
         headers: {
           'Content-Type': 'audio/mpeg'
         },
@@ -37,14 +53,17 @@
       audioArrayBuffer = fetchAudioResponse.data;
       const blobUrl = URL.createObjectURL(new Blob([audioArrayBuffer]));
       console.log({ blobUrl });
-      const wsurfer1 = WaveSurfer.create({
-        container: `#waveform`,
-        waveColor: 'violet',
-        progressColor: 'purple',
+      const wsurfer1 = await createNewWavAsync(ogAudioUrl);
+
+      wsurfer1.on('timeupdate', (newTime: number) => {
+        currentTime = newTime;
+        hoverTime = newTime;
+        console.log({ currentTime });
       });
 
-      console.log({ audioArrayBuffer });
-      await wsurfer1.load(blobUrl);
+      wsurfer1.on('drag', (relativeX: number) => {
+        hoverTime = relativeX * duration;
+      });
 
       duration = wsurfer1.getDuration();
       playAudio = () => {
@@ -65,19 +84,25 @@
         wsurfer1.seekTo(1);
       };
 
-      splitCurrentAudio = () => {
+      splitCurrentAudio = async () => {
         console.log('SPLITTING');
-        // audioSegments.push(wsurfer1);
+        const srcAudioBuffer = wsurfer1.getDecodedData()!;
+        console.log({ srcAudioBuffer });
+        console.log({ currentTime });
+        const firstHalfAudioBuffer = cutAudio(srcAudioBuffer, 0, currentTime);
+        const secondHalfAudioBuffer = cutAudio(srcAudioBuffer, currentTime, duration);
+
+        const firstHalfBlob = audioBufferToBlob(firstHalfAudioBuffer);
+        const secondHalfBlob = audioBufferToBlob(secondHalfAudioBuffer);
+
+        const firstHalfUrl = window.URL.createObjectURL(firstHalfBlob);
+        const secondHalfUrl = window.URL.createObjectURL(secondHalfBlob);
+
+        const firstHalfWave = await createNewWavAsync(firstHalfUrl);
+        const secondHalfWave = await createNewWavAsync(secondHalfUrl);
+        // audioSegments.push(firstHalfWave);
+        // console.log({ audioSegments });
       };
-
-      wsurfer1.on('timeupdate', (newTime: number) => {
-        currentTime = newTime;
-        hoverTime = newTime;
-      });
-
-      wsurfer1.on('drag', (relativeX: number) => {
-        hoverTime = relativeX * duration;
-      });
     } catch (fetchAudioError) {
       console.error({ fetchAudioError });
       setError(fetchAudioError);
@@ -122,12 +147,6 @@
 </script>
 
 <div>
-  <!-- <audio
-    id="originalAudio"
-    controls
-    src="https://freetestdata.com/wp-content/uploads/2021/09/Free_Test_Data_500KB_MP3.mp3"
-  />
-  <audio id="copiedAudio" controls /> -->
   {currentTime} / {duration}
   <div>{hoverTime}</div>
   <button on:click={stopAudio}> Stop </button>
@@ -138,6 +157,8 @@
   <button on:click={seekStartAudio}> Seek start </button>
   <button on:click={seekEndAudio}> Seek end </button>
   <br /><br />
-  <button>Split</button>
-  <div id="waveform" />
+  <button on:click={splitCurrentAudio}>Split</button>
+  <div id="wavesSection">
+    <div id="waveform" />
+  </div>
 </div>
