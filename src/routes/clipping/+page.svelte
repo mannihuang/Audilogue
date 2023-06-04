@@ -21,10 +21,13 @@
   let seekEndAudio = () => {};
   let splitCurrentAudio = () => {};
 
+  let waveContainerIds: string[] = [];
+
   onMount(async () => {
     async function createNewWavAsync(audioUrl: string) {
       const newWaveContainerId = `#waveform-${Math.floor(Math.random() * 10000000)}`;
       const newWaveContainer = document.createElement('div');
+      newWaveContainer.className = "wave-container";
       newWaveContainer.id = newWaveContainerId;
       document.getElementById('wavesSection')?.appendChild(newWaveContainer);
       // setTimeout(async () => {
@@ -66,6 +69,7 @@
       });
 
       duration = wsurfer1.getDuration();
+      audioSegments = [wsurfer1];
       playAudio = () => {
         wsurfer1.play();
       };
@@ -100,8 +104,19 @@
 
         const firstHalfWave = await createNewWavAsync(firstHalfUrl);
         const secondHalfWave = await createNewWavAsync(secondHalfUrl);
-        // audioSegments.push(firstHalfWave);
-        // console.log({ audioSegments });
+        // Replace the current one with the two new halves
+        audioSegments = [
+          firstHalfWave,
+          secondHalfWave,
+        ]
+        const waveContainerIds = audioSegments.map(wave => wave.getMediaElement().id);
+        console.log({ waveContainerIds });
+        // for(const ct of document.getElementsByClassName("wave-container")) {
+        //   if(!waveContainerIds.includes(ct.id)) {
+        //     ct.setAttribute("style", "display: none");
+        //   }
+        // }
+        console.log({ audioSegments });
       };
     } catch (fetchAudioError) {
       console.error({ fetchAudioError });
